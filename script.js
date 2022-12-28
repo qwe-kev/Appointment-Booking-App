@@ -4,7 +4,7 @@ var form = document.getElementById("myForm");
 var peopleList = document.getElementById("listOfPeople");
 
 
-function addItems(e) {
+async function addItems(e) {
     e.preventDefault();
     var li = document.createElement("li");
     li.appendChild(document.createTextNode(userName.value + " " + userEmail.value));
@@ -17,20 +17,19 @@ function addItems(e) {
     li.appendChild(deleteButton);
     peopleList.appendChild(li);
     console.log(peopleList);
-    // add to localStorage
-    let userDetails = JSON.stringify({name : userName.value, emailid : userEmail.value});
-    if(JSON.parse(localStorage.getItem(`userDetails${userEmail.value}`))) {
-        var items = peopleList.getElementsByTagName("li");
-        localStorage.removeItem(`userDetails${userEmail.value}`);
-        localStorage.setItem(`userDetails${userEmail.value}`, userDetails);
 
-    }
-    else {
-        localStorage.setItem(`userDetails${userEmail.value}`, userDetails);
-    }
+    // POST to crud crud REST resource (appointmentData)
+    let userDetails = {name : userName.value, emailid : userEmail.value};
+    await axios.post('https://crudcrud.com/api/73b290a65dfc427ab7ab8677bd6d0971/appointmentData',userDetails)
+    .then(res => {
+        console.log(res)
+    })
+    .catch(err => {
+        console.log(err);
+    })
 }
 
-var removeItem = function(e) {
+async function removeItem(e) {
     e.preventDefault();
     if(e.target.classList.contains("delete")) {
         if(confirm("Are you sure?")){
