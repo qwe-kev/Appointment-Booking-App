@@ -3,6 +3,29 @@ var userEmail = document.getElementById("email");
 var form = document.getElementById("myForm");
 var peopleList = document.getElementById("listOfPeople");
 
+async function readUsers() {
+    await axios.get('https://crudcrud.com/api/73b290a65dfc427ab7ab8677bd6d0971/appointmentData')
+    .then(res => {
+        res.data.forEach(user => {
+            var li = document.createElement("li");
+            li.appendChild(document.createTextNode(user.name + " " + user.emailid));
+            var editButton = document.createElement("button");
+            editButton.textContent = "EDIT";
+            var deleteButton = document.createElement("button");
+            deleteButton.classList.add("delete");
+            deleteButton.textContent = "X";
+            li.appendChild(editButton);
+            li.appendChild(deleteButton);
+            peopleList.appendChild(li);
+        })
+    })
+    .catch(err => {
+        console.log(err);
+        return Promise.reject(err);
+    })
+}
+
+
 
 async function addItems(e) {
     e.preventDefault();
@@ -42,6 +65,9 @@ async function removeItem(e) {
         }
     }
 
+window.addEventListener('DOMContentLoaded', (e) => {
+    readUsers();
+}) 
 
 peopleList.addEventListener('click', removeItem);
 
